@@ -22,55 +22,55 @@ pipeline {
         stage('Deps') {
             agent {
                 docker {
-                    image 'oven/bun:1.3.10'
-                    args '-v $HOME/.bun-cache:/root/.bun-cache'
+                    image 'node:20-alpine'
+                    args '-v $HOME/.npm-cache:/root/.npm-cache'
                 }
             }
 
             steps {
-                sh 'bun install --frozen-lockfile'
+                sh 'npm ci'
             }
         }
 
         stage('Typecheck') {
             agent {
                 docker {
-                    image 'oven/bun:1.3.10'
-                    args '-v $HOME/.bun-cache:/root/.bun-cache'
+                    image 'node:20-alpine'
+                    args '-v $HOME/.npm-cache:/root/.npm-cache'
                 }
             }
 
             steps {
-                sh 'bun install --frozen-lockfile'
-                sh 'bun run typecheck'
+                sh 'npm ci'
+                sh 'npm run typecheck'
             }
         }
 
         stage('Build') {
             agent {
                 docker {
-                    image 'oven/bun:1.3.10'
-                    args '-v $HOME/.bun-cache:/root/.bun-cache'
+                    image 'node:20-alpine'
+                    args '-v $HOME/.npm-cache:/root/.npm-cache'
                 }
             }
 
             steps {
-                sh 'bun install --frozen-lockfile'
-                sh 'bun run build'
+                sh 'npm ci'
+                sh 'npm run build'
             }
         }
 
         stage('Test') {
             agent {
                 docker {
-                    image 'oven/bun:1.3.10'
-                    args '-v $HOME/.bun-cache:/root/.bun-cache'
+                    image 'node:20-alpine'
+                    args '-v $HOME/.npm-cache:/root/.npm-cache'
                 }
             }
 
             steps {
-                sh 'bun install --frozen-lockfile'
-                sh 'bun run test'
+                sh 'npm ci'
+                sh 'npm run test'
             }
         }
 
