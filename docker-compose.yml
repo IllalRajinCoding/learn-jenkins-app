@@ -1,0 +1,29 @@
+# Lab CI/CD lokal: 1 perintah, Jenkins + aplikasi jalan.
+#
+#   docker compose up -d jenkins   # Jenkins LTS di :8080 (T-01)
+#   docker compose up -d app       # landing page dari container di :3001 (T-05)
+#
+# Mount Docker socket ke Jenkins (opsional) agar pipeline 'Deploy' bisa
+# membangun image langsung dari dalam Jenkins.
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: learn-jenkins-master
+    ports:
+      - '8080:8080' # UI Jenkins
+      - '50000:50000' # TCP agent (JNLP)
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      # - /var/run/docker.sock:/var/run/docker.sock # opsional: docker-in-Jenkins
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: learn-jenkins-app
+    ports:
+      - '3001:80'
+    restart: unless-stopped
+
+volumes:
+  jenkins_home:
