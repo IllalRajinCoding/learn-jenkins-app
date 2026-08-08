@@ -9,7 +9,7 @@
 pipeline {
     agent {
         docker {
-            image 'oven/bun:1'
+            image 'oven/bun:1.3.10'
             args '-v $HOME/.bun-cache:/root/.bun-cache'
         }
     }
@@ -31,30 +31,54 @@ pipeline {
         }
 
         stage('Deps') {
+            agent {
+                docker {
+                    image 'oven/bun:1.3.10'
+                    args '-v $HOME/.bun-cache:/root/.bun-cache'
+                }
+            }
+
             steps {
                 sh 'bun install --frozen-lockfile'
             }
         }
 
         stage('Typecheck') {
+            agent {
+                docker {
+                    image 'oven/bun:1.3.10'
+                    args '-v $HOME/.bun-cache:/root/.bun-cache'
+                }
+            }
             steps {
                 sh 'bun run typecheck'
             }
         }
 
         stage('Build') {
+            agent {
+                docker {
+                    image 'oven/bun:1.3.10'
+                    args '-v $HOME/.bun-cache:/root/.bun-cache'
+                }
+            }
             steps {
                 sh 'bun run build'
             }
         }
 
         stage('Test') {
+            agent {
+                docker {
+                    image 'oven/bun:1.3.10'
+                    args '-v $HOME/.bun-cache:/root/.bun-cache'
+                }
+            }
             steps {
                 sh 'bun run test'
             }
         }
 
-        stage('Deploy') {
             when {
                 branch 'main'
             }
